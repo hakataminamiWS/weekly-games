@@ -1,0 +1,30 @@
+<svg version="1.1" id="Layer_1"
+    xmlns="http://www.w3.org/2000/svg" 
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    x="0px" y="0px"
+    viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="rainbow" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/>
+        <stop offset="5%" stop-color="#ff8a8a" stop-opacity="1"/>
+        <stop offset="20%" stop-color="#ffd180" stop-opacity="1"/>
+        <stop offset="35%" stop-color="#ffff8d" stop-opacity="1"/>
+        <stop offset="50%" stop-color="#ccff90" stop-opacity="1"/>
+        <stop offset="65%" stop-color="#80d8ff" stop-opacity="1"/>
+        <stop offset="80%" stop-color="#b388ff" stop-opacity="1"/>
+        <stop offset="95%" stop-color="#f8bbd0" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#ffffff" stop-opacity="0.6"/>
+    </linearGradient>
+  </defs>
+
+  <style type="text/css">
+    .rainbow {
+      fill: url(#rainbow);
+      stroke: #dcdcdc;
+      stroke-opacity: 0.8;    
+    }
+  </style>
+
+<path class="rainbow"
+d="m61.63 112.01-57.92-66.26h38.01l19.91 66.26zm2.11-95.92-15.29 25.13h31.71l-16.42-25.13zm21 24.96-17.01-25.07h31.45l-14.44 25.07zm-40.53.24 14.9-25.31h-31.94l17.04 25.31zm60.06-22.33-15.04 22.26h36.21l-21.17-22.26zm-79.45 0 15.81 22.26h-38.07l22.26-22.26zm22.47 26.59h33.63l-16.32 65.47-17.31-65.47zm20.18 66.47 57.23-66.27h-38.01l-19.22 66.27z"/>
+</svg>
