@@ -1,37 +1,73 @@
 <template>
-    <TopPage v-if="page === 'top'"
-             @start="page = 'select'" />
-    <SelectGame v-if="page === 'select'"
-                @select="startGame" />
-    <Game v-if="page === 'game'"
-          :level="level"
-          @finish="finishGame"
-          @pinpon="playPinpon"
-          @bobo="playBobo" />
-    <Result v-if="page === 'result'"
-            :results="results"
-            @restart="restart"
-            @exit="page = 'top'" />
-    <SoundEffectPlayer ref="soundPlayerRef" />
+    <router-view
+                 v-slot="{ Component }">
+        <component
+                   :is="Component"
+                   @select="goSelect"
+                   @start="startGame"
+                   @finish="finishGame"
+                   @restart="restartGame"
+                   @exit="goTop"
+                   @pinpon="playPinpon"
+                   @bobo="playBobo"
+                   :results="results" />
+        <SoundEffectPlayer ref="soundPlayerRef" />
+    </router-view>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import TopPage from './components/TopPage.vue'
-import SelectGame from './components/SelectLevel.vue'
-import Game from './components/Game.vue'
-import Result from './components/Result.vue'
-import { ref as vueRef } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import SoundEffectPlayer from './components/SoundEffectPlayer.vue'
 
-const page = ref('top')
-const level = ref('easy')
-const results = ref({ level: 'easy', correct: 0, incorrect: 0, total: 0 })
-const soundPlayerRef = vueRef()
+const router = useRouter()
+const route = useRoute()
+
+const results = ref(
+    {
+        rank: 'good',
+        message: 'good!',
+        gameId: 'game-this-week',
+        level: 'easy'
+    })
+const soundPlayerRef = ref()
+
+function goSelect(selectedGameId) {
+    router.push({
+        path: '/select',
+        query: { gameId: selectedGameId }
+    })
+}
 
 function startGame(selectedLevel) {
-    level.value = selectedLevel
-    page.value = 'game'
+    const gameId = route.query.gameId || ''
+    router.push({
+        path: gameId,
+        query: { level: selectedLevel }
+    })
+}
+
+function finishGame(finished) {
+    results.value = finished
+    router.push('/result')
+}
+
+function restartGame(gameId, level) {
+    // 必要なら結果をリセット
+    // results.value = {
+    //     rank: '',
+    //     message: ''
+    // }
+
+    // 同じ gameId に戻る
+    router.push({
+        path: `/${gameId}`,
+        query: { level: level }
+    })
+}
+
+function goTop() {
+    router.push('/')
 }
 
 function playPinpon() {
@@ -41,28 +77,4 @@ function playPinpon() {
 function playBobo() {
     soundPlayerRef.value?.bobo()
 }
-
-function finishGame(finished) {
-    results.value = finished
-    page.value = 'result'
-}
-
-function restart() {
-    results.value = { level: 'easy', correct: 0, incorrect: 0, total: 0 }
-    page.value = 'select'
-}
 </script>
-
-<style>
-body {
-    font-family: sans-serif;
-    text-align: center;
-    padding: 2rem;
-}
-
-button {
-    margin: 0.5rem;
-    padding: 0.5rem 1rem;
-    font-size: 1.2rem;
-}
-</style>
