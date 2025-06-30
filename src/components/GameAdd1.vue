@@ -4,7 +4,7 @@
 
         <div class="card">
             <p class="expression">
-                {{ state.current.a }} - {{ state.current.b }} = ?
+                {{ state.current.a }} + {{ state.current.b }} = ?
             </p>
         </div>
 
@@ -38,7 +38,7 @@
 
 <script setup>
 import { reactive, ref, watch } from 'vue'
-import { questions as allQuestions } from '../data/game-subtract-1-questions.js'
+import { questions as allQuestions } from '../data/game-add-1-questions.js'
 import { useGameRoute } from '../composables/useGameRoute.js'
 
 const emit = defineEmits(['finish'])
@@ -89,7 +89,7 @@ watch([() => state.currentIndex, shuffled], ([newIndex]) => {
     if (!shuffled.value.length) return
     const current = shuffled.value[newIndex]
     if (!current) return
-    const correctAnswer = current.a - current.b
+    const correctAnswer = current.a + current.b
     state.options = generateOptions(correctAnswer)
 }, { immediate: true })
 
