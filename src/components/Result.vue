@@ -15,6 +15,10 @@
 
 <script setup>
 import { computed } from 'vue'
+import { gameMap } from '../constants/gameMap.js'
+import { onMounted } from 'vue'
+import { saveResultToHistory } from '../composables/useHistory.js'
+import { levelMap } from '../constants/levelMap.js'
 
 const props = defineProps(['results'])
 const rate = computed(() => props.results.correct / props.results.total)
@@ -30,8 +34,19 @@ const imageSrc = computed(() => {
 
 const resultMessage = computed(() => {
     if (props.results.rank === 'perfect') return 'パーフェクト！'
-    if (props.results.rank === 'good') return 'すばらしい！'
+    if (props.results.rank === 'great') return 'すばらしい！'
     return 'よくできました！'
+})
+
+onMounted(() => {
+    saveResultToHistory({
+        gameId: props.results.gameId,
+        gameName: gameMap[props.results.gameId],
+        level: props.results.level,
+        levelName: levelMap[props.results.level],
+        rank: props.results.rank,
+        rankName: resultMessage.value
+    })
 })
 </script>
 

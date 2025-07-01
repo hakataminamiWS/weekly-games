@@ -4,6 +4,7 @@ import TopPage from '../components/TopPage.vue'
 import SelectLevel from '../components/SelectLevel.vue'
 import GameThisWeek from '../components/GameThisWeek.vue'
 import Result from '../components/Result.vue'
+import History from '../components/History.vue'
 // 過去のゲーム
 import GameAdd1 from '../components/GameAdd1.vue'
 // import GameAdd2 from '../components/GameAdd2.vue'
@@ -14,6 +15,7 @@ const routes = [
     { path: '/game-this-week', component: GameThisWeek },
     { path: '/game-add-1', component: GameAdd1 },
     { path: '/result', component: Result },
+    { path: '/history', component: History },
     { path: '/:pathMatch(.*)*', redirect: '/' }
 ]
 

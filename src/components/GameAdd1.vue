@@ -113,8 +113,8 @@ function getNextStateOrFinish(state) {
 function getRank(level, correct, total) {
     const rate = correct / total
     if (rate === 1 && level === 'oni') return 'perfect'
-    if (rate < 0.9) return 'good'
-    return 'great'
+    if (rate >= 0.9) return 'great'
+    return 'good'
 }
 
 function finishGame(rank, message) {
@@ -151,8 +151,8 @@ async function answer(opt) {
 }
 
 async function answerAndBlur(opt, event) {
-    await answer(opt)
     event.target.blur()
+    await answer(opt)
 }
 </script>
 

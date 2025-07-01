@@ -7,6 +7,7 @@
                    @start="startGame"
                    @finish="finishGame"
                    @restart="restartGame"
+                   @history="goHistory"
                    @exit="goTop"
                    @pinpon="playPinpon"
                    @bobo="playBobo"
@@ -25,10 +26,10 @@ const route = useRoute()
 
 const results = ref(
     {
-        rank: 'good',
-        message: 'good!',
-        gameId: 'game-this-week',
-        level: 'easy'
+        rank: '',
+        message: '',
+        gameId: '',
+        level: ''
     })
 const soundPlayerRef = ref()
 
@@ -68,6 +69,10 @@ function restartGame(gameId, level) {
 
 function goTop() {
     router.push('/')
+}
+
+function goHistory() {
+    router.push('/history')
 }
 
 function playPinpon() {
