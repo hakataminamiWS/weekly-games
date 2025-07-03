@@ -1,17 +1,17 @@
 <template>
     <div>
-        <p>今週のゲーム</p>
+        <p>こんしゅうのゲーム</p>
         <button @click="$emit('select', 'game-this-week')">
             {{ gameMap['game-this-week'] }}
         </button>
 
         <p style="margin-top: 2em;">
-            <button @click="$emit('history')">
+            <a href="#" @click.prevent="$emit('history')">
                 りれき
-            </button>
+            </a>
         </p>
 
-        <p style="margin-top: 1em;">過去のゲーム</p>
+        <p style="margin-top: 1em;">むかしのゲーム</p>
         <ul>
             <li>
                 <a href="#" @click.prevent="$emit('select', 'game-add-1')">

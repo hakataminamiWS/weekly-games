@@ -1,6 +1,6 @@
 <template>
     <div style="margin-top: 1em;">
-        <h2>履歴</h2>
+        <h2>りれき</h2>
         <table border="1" cellspacing="0" cellpadding="4">
             <thead>
                 <tr>
@@ -18,7 +18,7 @@
                     <td>{{ item.rankName }}</td>
                 </tr>
                 <tr v-if="historyList.length === 0">
-                    <td colspan="4">履歴がありません</td>
+                    <td colspan="4">りれきがありません</td>
                 </tr>
             </tbody>
         </table>

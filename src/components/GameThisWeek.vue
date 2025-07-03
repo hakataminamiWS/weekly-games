@@ -1,6 +1,8 @@
 <template>
     <div v-if="state.current">
-        <p>問題 {{ state.currentIndex + 1 }} / {{ maxQuestions }}</p>
+        <p>
+            だい {{ state.currentIndex + 1 }} / {{ maxQuestions }} もん
+        </p>
 
         <div class="card">
             <p class="expression">
@@ -32,7 +34,9 @@
             </div>
         </div>
 
-        <p>正解数: {{ state.correct }}</p>
+        <div class="progress">
+            {{ levelMap[level] }}：{{ state.correct }} もんせいかい！
+        </div>
     </div>
 </template>
 
@@ -40,6 +44,7 @@
 import { reactive, ref, watch } from 'vue'
 import { questions as allQuestions } from '../data/game-subtract-1-questions.js'
 import { useGameRoute } from '../composables/useGameRoute.js'
+import { levelMap } from '../constants/levelMap.js'
 
 const emit = defineEmits(['finish'])
 const { level, gameFinish } = useGameRoute()
@@ -214,5 +219,15 @@ async function answerAndBlur(opt, event) {
 
 .wrong {
     color: red;
+}
+
+.progress {
+    padding: 8px 16px;
+    background-color: #baeedc;
+    border-radius: 12px;
+    /* 角丸 */
+    display: inline-block;
+    font-weight: bold;
+    color: #333;
 }
 </style>

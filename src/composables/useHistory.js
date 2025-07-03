@@ -24,5 +24,5 @@ export function saveResultToHistory({ gameId, gameName, level, levelName, rank, 
 
 export function getSortedHistoryList() {
     const history = JSON.parse(localStorage.getItem('gameHistory') || '{}')
-    return Object.values(history).sort((a, b) => a.date.localeCompare(b.date))
+    return Object.values(history).sort((a, b) => b.date.localeCompare(a.date))
 }
