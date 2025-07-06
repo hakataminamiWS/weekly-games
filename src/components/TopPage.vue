@@ -18,6 +18,11 @@
                     {{ gameMap['game-add-1'] }}
                 </a>
             </li>
+            <li>
+                <a href="#" @click.prevent="$emit('select', 'game-subtract-1')">
+                    {{ gameMap['game-subtract-1'] }}
+                </a>
+            </li>
         </ul>
 
     </div>

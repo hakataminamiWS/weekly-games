@@ -6,7 +6,7 @@
 
         <div class="card">
             <p class="expression">
-                {{ state.current.a }} - {{ state.current.b }} = ?
+                {{ state.current.a }} + {{ state.current.b }} = ?
             </p>
         </div>
 
@@ -42,7 +42,7 @@
 
 <script setup>
 import { reactive, ref, watch } from 'vue'
-import { questions as allQuestions } from '../data/game-subtract-1-questions.js'
+import { questions as allQuestions } from '../data/game-add-2-questions.js'
 import { useGameRoute } from '../composables/useGameRoute.js'
 import { levelMap } from '../constants/levelMap.js'
 
@@ -56,12 +56,21 @@ const maxQuestions = levelQuestionCount[level] ?? 5
 // シャッフルされた問題リストを保持（初期化とlevel変更時に再生成）
 const shuffled = ref([])
 
+// Fisher-Yates shuffle
+function shuffle(array) {
+    const copied = [...array];
+    for (let i = copied.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copied[i], copied[j]] = [copied[j], copied[i]];
+    }
+    return copied;
+}
+
 // level か maxQuestions の変化で問題をシャッフルし直す
 watch([() => level, maxQuestions], () => {
-    shuffled.value = [...allQuestions]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, maxQuestions)
-}, { immediate: true })
+    const shuffledQuestions = shuffle(allQuestions).slice(0, maxQuestions);
+    shuffled.value = shuffledQuestions;
+}, { immediate: true });
 
 // 状態をまとめて管理
 const state = reactive({
@@ -82,7 +91,7 @@ function generateOptions(correctAnswer) {
         const delta = Math.floor(Math.random() * 7) - 3
         if (delta === 0) continue
         const val = correctAnswer + delta
-        if (val >= 0 && val <= 10) set.add(val)
+        if (val >= 0 && val <= 19) set.add(val)
     }
     return [...set]
         .sort((a, b) => a - b)
@@ -92,9 +101,8 @@ function generateOptions(correctAnswer) {
 // state.currentIndex または shuffled が変わったら選択肢を更新
 watch([() => state.currentIndex, shuffled], ([newIndex]) => {
     if (!shuffled.value.length) return
-    const current = shuffled.value[newIndex]
-    if (!current) return
-    const correctAnswer = current.a - current.b
+    if (!state.current) return
+    const correctAnswer = state.current.a + state.current.b
     state.options = generateOptions(correctAnswer)
 }, { immediate: true })
 
@@ -145,7 +153,7 @@ async function answer(opt) {
     const next = getNextStateOrFinish(state)
     if (next.finished) {
         const rank = getRank(level, state.correct, maxQuestions)
-        const message = `${maxQuestions}問中 ${state.correct}問正解！`
+        const message = `${maxQuestions}もんちゅう ${state.correct}もんせいかい！`
 
         finishGame(rank, message)
     } else {

@@ -6,9 +6,9 @@
         <img :src="imageSrc" alt="結果イメージ" width="200" />
         <div>
             <button @click="$emit('restart', results.gameId, results.level)">
-                もう一度
+                もういちど
             </button>
-            <button @click="$emit('exit')">終わる</button>
+            <button @click="$emit('exit')">おわる</button>
         </div>
     </div>
 </template>
