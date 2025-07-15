@@ -10,6 +10,31 @@
             </p>
         </div>
 
+        <div>
+            <button
+                    class="hint_button"
+                    @click="toggleHint"
+                    :title="hintVisible ? 'ヒントをかくす' : 'ヒントをみてみる'">
+                {{ hintVisible ? 'ヒントをかくす' : 'ヒントをみてみる' }}
+            </button>
+            <div v-if="hintVisible" class="hint">
+                <p>
+                    「{{ state.current.a }} + {{ state.current.b }} 」
+                    は
+                    「10 + {{ state.current.a - 10 }} + {{ state.current.b }}」
+                    だよ
+                </p>
+                <p>
+                    まず
+                    「{{ state.current.a - 10 }} + {{ state.current.b }}」
+                    をけいさんしよう
+                </p>
+                <p>
+                    そのあと、こたえに 10 をたしてみよう
+                </p>
+            </div>
+        </div>
+
         <div class="options">
             <div v-for="opt in state.options" :key="opt.val" class="option-wrapper">
                 <div class="mark-box">
@@ -41,6 +66,7 @@
 </template>
 
 <script setup>
+// top level object は、return 不要
 import { reactive, ref, watch } from 'vue'
 import { questions as allQuestions } from '../data/game-add-2-questions.js'
 import { useGameRoute } from '../composables/useGameRoute.js'
@@ -55,6 +81,12 @@ const maxQuestions = levelQuestionCount[level] ?? 5
 
 // シャッフルされた問題リストを保持（初期化とlevel変更時に再生成）
 const shuffled = ref([])
+
+// ヒント
+const hintVisible = ref(false)
+const toggleHint = () => {
+    hintVisible.value = !hintVisible.value
+}
 
 // Fisher-Yates shuffle
 function shuffle(array) {
@@ -167,6 +199,8 @@ async function answerAndBlur(opt, event) {
     event.target.blur()
     await answer(opt)
 }
+
+
 </script>
 
 <style scoped>
@@ -237,5 +271,11 @@ async function answerAndBlur(opt, event) {
     display: inline-block;
     font-weight: bold;
     color: #333;
+}
+
+.hint_button {
+    color: black;
+    background-color: #ddd;
+    cursor: help;
 }
 </style>
