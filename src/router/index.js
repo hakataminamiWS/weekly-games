@@ -1,24 +1,50 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import TopPage from '../components/TopPage.vue'
-import SelectLevel from '../components/SelectLevel.vue'
-import GameThisWeek from '../components/GameThisWeek.vue'
-import Result from '../components/Result.vue'
-import History from '../components/History.vue'
-// 過去のゲーム
-import GameAdd1 from '../components/GameAdd1.vue'
-import GameSubtract1 from '../components/GameSubtract1.vue'
+import TopPage from '@/views/TopPage.vue'
+import History from '@/views/History.vue'
+import Result from '@/views/Result.vue'
+
+import { games } from '@/constants/games.js'
+import { levels } from '@/constants/levels.js'
+import { getSelectLevelRouteInfo, getPlayRouteInfo } from '@/utils/gameRoutes.js'
+
+const gameLevelSelectRoutes = games
+    .map(game => {
+        const route = getSelectLevelRouteInfo(game.id)
+        if (!route) return null
+        return {
+            path: route.path,
+            name: route.routeName,
+            component: route.component,
+            props: { game }
+        }
+    })
+    .filter(Boolean)
+
+const gamePlayRoutes = games
+    .flatMap(game => {
+        return levels.map(level => {
+            const route = getPlayRouteInfo(game.id, level.key)
+            if (!route) return null
+            return {
+                path: route.path,
+                name: route.routeName,
+                component: route.component,
+                props: { game, level }
+            }
+        })
+    })
+    .filter(Boolean)
 
 const routes = [
-    { path: '/', component: TopPage },
-    { path: '/select', component: SelectLevel },
-    { path: '/game-this-week', component: GameThisWeek },
-    { path: '/game-add-1', component: GameAdd1 },
-    { path: '/game-subtract-1', component: GameSubtract1 },
-    { path: '/result', component: Result },
-    { path: '/history', component: History },
+    { path: '/', name: 'TopPage', component: TopPage },
+    { path: '/history', name: 'History', component: History },
+    ...gameLevelSelectRoutes,
+    ...gamePlayRoutes,
+    { path: '/result', name: 'Result', component: Result },
     { path: '/:pathMatch(.*)*', redirect: '/' }
 ]
+
 
 export const router = createRouter({
     history: createWebHistory(),

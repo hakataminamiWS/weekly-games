@@ -1,70 +1,33 @@
-<template>
-    <div v-if="state.current">
-        <p>
-            だい {{ state.currentIndex + 1 }} / {{ maxQuestions }} もん
-        </p>
-
-        <div class="card">
-            <p class="expression">
-                {{ state.current.a }} + {{ state.current.b }} = ?
-            </p>
-        </div>
-
-        <div class="options">
-            <div v-for="opt in state.options" :key="opt.val" class="option-wrapper">
-                <div class="mark-box">
-                    <span class="mark correct" :class="{ visible: state.answered && opt.isCorrect }">
-                        〇
-                    </span>
-                    <span class="mark wrong"
-                          :class="{ visible: state.answered && state.selected === opt.val && !opt.isCorrect }">
-                        ✕
-                    </span>
-                </div>
-
-                <button
-                        :disabled="state.answered"
-                        @click="answerAndBlur(opt, $event)"
-                        :class="{
-                            correct: state.answered && opt.isCorrect,
-                            wrong: state.answered && state.selected === opt.val && !opt.isCorrect
-                        }">
-                    {{ opt.val }}
-                </button>
-            </div>
-        </div>
-
-        <div class="progress">
-            {{ levelMap[level] }}：{{ state.correct }} もんせいかい！
-        </div>
-    </div>
-</template>
-
 <script setup>
 import { reactive, ref, watch } from 'vue'
-import { questions as allQuestions } from '../data/game-add-1-questions.js'
-import { useGameRoute } from '../composables/useGameRoute.js'
-import { levelMap } from '../constants/levelMap.js'
+import { useRouter } from 'vue-router'
+import { questions as allQuestions } from '@/data/game-add-1-questions.js'
+import { levels } from '@/constants/levels.js'
+import { shuffle } from '@/utils/shuffle.js'
+import { useHistory } from '@/composables/useHistory.js'
+import { rankNameMap } from '@/constants/rankNameMap.js'
 
-const emit = defineEmits(['finish'])
-const { level, gameFinish } = useGameRoute()
+// ゲームごと結果とrank を設定
+function getRank(level, correct, total) {
+    const rate = correct / total
+    if (rate === 1 && level === 'oni') return 'perfect'
+    if (rate >= 0.9) return 'great'
+    return 'good'
+}
+
+const emit = defineEmits(['pinpon', 'bobo'])
+const router = useRouter()
+const props = defineProps({ game: Object, level: Object })
+const game = props.game
+const level = props.level
+const levelLabel = levels.find(ele => ele.key === level.key)?.label
 
 // 問題数の定義
 const levelQuestionCount = { easy: 5, normal: 10, oni: 45 }
-const maxQuestions = levelQuestionCount[level] ?? 5
+const maxQuestions = levelQuestionCount[level.key] ?? 5
 
 // シャッフルされた問題リストを保持（初期化とlevel変更時に再生成）
 const shuffled = ref([])
-
-// Fisher-Yates shuffle
-function shuffle(array) {
-    const copied = [...array];
-    for (let i = copied.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [copied[i], copied[j]] = [copied[j], copied[i]];
-    }
-    return copied;
-}
 
 // level か maxQuestions の変化で問題をシャッフルし直す
 watch([() => level, maxQuestions], () => {
@@ -123,15 +86,21 @@ function getNextStateOrFinish(state) {
     }
 }
 
-function getRank(level, correct, total) {
-    const rate = correct / total
-    if (rate === 1 && level === 'oni') return 'perfect'
-    if (rate >= 0.9) return 'great'
-    return 'good'
-}
+function finishGame({ game, level, correct, total }) {
+    const rank = getRank(level.key, correct, total)
+    const result = {
+        gameId: game.id,
+        gameName: game.label,
+        level: level.key,
+        levelName: level.label,
+        rank,
+        rankName: rankNameMap[rank] || 'がんばったね！',
+    }
 
-function finishGame(rank, message) {
-    gameFinish(emit, rank, message)
+    const history = useHistory(result)
+    history.saveLatestResult()
+    history.saveResultToHistory()
+    router.push('/result')
 }
 
 // 答えを選択した処理
@@ -152,10 +121,7 @@ async function answer(opt) {
 
     const next = getNextStateOrFinish(state)
     if (next.finished) {
-        const rank = getRank(level, state.correct, maxQuestions)
-        const message = `${maxQuestions}もんちゅう ${state.correct}もんせいかい！`
-
-        finishGame(rank, message)
+        finishGame({ game, level, correct: state.correct, total: maxQuestions })
     } else {
         state.currentIndex = next.nextIndex
         state.selected = null
@@ -168,6 +134,49 @@ async function answerAndBlur(opt, event) {
     await answer(opt)
 }
 </script>
+
+
+<template>
+    <div v-if="state.current">
+        <p>
+            だい {{ state.currentIndex + 1 }} / {{ maxQuestions }} もん
+        </p>
+
+        <div class="card">
+            <p class="expression">
+                {{ state.current.a }} + {{ state.current.b }} = ?
+            </p>
+        </div>
+
+        <div class="options">
+            <div v-for="opt in state.options" :key="opt.val" class="option-wrapper">
+                <div class="mark-box">
+                    <span class="mark correct" :class="{ visible: state.answered && opt.isCorrect }">
+                        〇
+                    </span>
+                    <span class="mark wrong"
+                          :class="{ visible: state.answered && state.selected === opt.val && !opt.isCorrect }">
+                        ✕
+                    </span>
+                </div>
+
+                <button
+                        :disabled="state.answered"
+                        @click="answerAndBlur(opt, $event)"
+                        :class="{
+                            correct: state.answered && opt.isCorrect,
+                            wrong: state.answered && state.selected === opt.val && !opt.isCorrect
+                        }">
+                    {{ opt.val }}
+                </button>
+            </div>
+        </div>
+
+        <div class="progress">
+            {{ levelLabel }}：{{ state.correct }} もんせいかい！
+        </div>
+    </div>
+</template>
 
 <style scoped>
 .card {

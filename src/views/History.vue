@@ -1,3 +1,15 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useHistory } from '@/composables/useHistory.js'
+
+const historyList = ref([])
+onMounted(() => {
+    const history = useHistory({})
+    historyList.value = history.getSortedHistoryList()
+})
+
+</script>
+
 <template>
     <div style="margin-top: 1em;">
         <h2>りれき</h2>
@@ -24,14 +36,3 @@
         </table>
     </div>
 </template>
-
-<script setup>
-import { ref, onMounted } from 'vue'
-import { getSortedHistoryList } from '../composables/useHistory.js'
-
-const historyList = ref([])
-
-onMounted(() => {
-    historyList.value = getSortedHistoryList()
-})
-</script>
