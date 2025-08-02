@@ -234,13 +234,17 @@ onMounted(() => {
             </div>
 
             <div v-else>
-                <button @click="nextCard" :disabled="state.reading">
-                    つぎをよみあげる
-                </button>
+                <div class="flex">
+                    <button @click="nextCard" :disabled="state.reading"
+                            class="button">
+                        つぎをよみあげる
+                    </button>
 
-                <button @click="startReadingCurrent" :disabled="state.reading">
-                    もういちど
-                </button>
+                    <button @click="startReadingCurrent" :disabled="state.reading"
+                            class="button">
+                        もういちど
+                    </button>
+                </div>
 
                 <h2>いまのかるた</h2>
 
@@ -293,6 +297,25 @@ pre {
     text-align: left;
     white-space: pre-wrap;
     word-wrap: break-word;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.button {
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    min-width: 10rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .key {
