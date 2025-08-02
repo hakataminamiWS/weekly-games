@@ -318,6 +318,11 @@ pre {
     transition: background-color 0.2s;
 }
 
+.button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
 .key {
     background-color: #aae29c;
     border-radius: 12px;
