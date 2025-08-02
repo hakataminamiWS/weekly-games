@@ -72,3 +72,6 @@ defineExpose({
     bobo
 });
 </script>
+<template>
+    <div style="display:none;"></div>
+</template>

@@ -20,15 +20,8 @@ function playBobo() {
     <router-view
                  v-slot="{ Component }">
         <component :is="Component"
-                   @levels="goSelect"
-                   @start="startGame"
-                   @finish="finishGame"
-                   @restart="restartGame"
-                   @history="goHistory"
-                   @exit="goTop"
                    @pinpon="playPinpon"
-                   @bobo="playBobo"
-                   :results="results" />
+                   @bobo="playBobo"/>
         <SoundEffectPlayer ref="soundPlayerRef" />
     </router-view>
 </template>

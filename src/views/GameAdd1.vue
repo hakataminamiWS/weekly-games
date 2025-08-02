@@ -29,8 +29,7 @@ const maxQuestions = levelQuestionCount[level.key] ?? 5
 // シャッフルされた問題リストを保持（初期化とlevel変更時に再生成）
 const shuffled = ref([])
 
-// level か maxQuestions の変化で問題をシャッフルし直す
-watch([() => level, maxQuestions], () => {
+watch([() => level], () => {
     const shuffledQuestions = shuffle(allQuestions).slice(0, maxQuestions);
     shuffled.value = shuffledQuestions;
 }, { immediate: true });

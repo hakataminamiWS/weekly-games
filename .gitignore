@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+#
+src/data/game-karuta-reading-yomifuda.json
